@@ -263,6 +263,20 @@
   .field input:focus, .field select:focus, .field textarea:focus{
     outline:2px solid var(--teal); outline-offset:1px; border-color:var(--teal);
   }
+  /* Consent checkbox row under the Message field */
+  .consent-row{margin-bottom:20px;}
+  .consent-row label{
+    display:flex; gap:11px; align-items:flex-start; cursor:pointer;
+    font-size:15.5px; color:var(--ink); line-height:1.5;
+    padding:12px 14px; border:1px solid transparent; border-radius:9px;
+  }
+  .consent-row input[type="checkbox"]{
+    width:20px; height:20px; flex:none; margin:2px 0 0;
+    accent-color:var(--teal-dark); cursor:pointer;
+  }
+  .consent-row a{font-weight:700;}
+  .consent-row.invalid label{border-color:#c0453e; background:#fdf0ef;}
+  .consent-row.invalid input[type="checkbox"]{outline:2px solid #c0453e; outline-offset:1px;}
   form .btn{width:100%;}
   @media(min-width:560px){ form .btn{width:auto; padding-left:36px; padding-right:36px;} }
   .form-note{margin-top:20px; color:var(--muted); font-size:15px; max-width:820px;}
@@ -549,6 +563,12 @@
               <label for="fMessage">Message</label>
               <textarea id="fMessage" name="message" required></textarea>
             </div>
+            <div class="consent-row" id="consentRow" tabindex="-1">
+              <label for="fConsent">
+                <input type="checkbox" id="fConsent" name="consent" required />
+                <span>I agree to the collection and use of my information as described in the <a href="#privacy">Privacy Policy</a>.</span>
+              </label>
+            </div>
             <input type="text" name="_honey" id="fHoney" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none" />
             <p class="form-error" id="formError" role="alert"></p>
             <button type="submit" class="btn btn-navy">Send Inquiry</button>
@@ -654,6 +674,12 @@
       el.addEventListener('change', function () { el.classList.remove('invalid'); });
     });
 
+    // Clear the consent row's error highlight as soon as the box is ticked.
+    var consentRow = document.getElementById('consentRow');
+    field('fConsent').addEventListener('change', function () {
+      consentRow.classList.remove('invalid');
+    });
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       var nameEl = field('fName'), emailEl = field('fEmail'),
@@ -672,6 +698,7 @@
       else if (!emailEl.checkValidity()) { missing.push('a valid email address'); emailEl.classList.add('invalid'); }
       if (!service) { missing.push('a service of interest'); serviceEl.classList.add('invalid'); }
       if (!message) { missing.push('a message'); messageEl.classList.add('invalid'); }
+      if (!field('fConsent').checked) { missing.push('your consent to the Privacy Policy'); consentRow.classList.add('invalid'); }
 
       if (missing.length) {
         formSuccess.classList.remove('show');
@@ -696,6 +723,7 @@
         'Email: ' + email,
         'Phone Number: ' + (phone || '—'),
         'Service of interest: ' + service,
+        'Privacy Policy consent: Agreed',
         '',
         'Message:',
         message
@@ -715,6 +743,7 @@
         email: email,
         service: service,
         message: message,
+        consent: 'Agreed to the collection and use of information as described in the Privacy Policy',
         _subject: 'Website inquiry — Pacific Medical Concierge',
         _template: 'table',
         _captcha: 'false',
@@ -758,6 +787,7 @@
         if (phone) { addSummaryRow('Phone Number', phone); }
         addSummaryRow('Service of interest', service);
         addSummaryRow('Message', message);
+        addSummaryRow('Privacy Policy consent', 'Agreed');
         form.style.display = 'none';
         formSuccess.classList.add('show');
         formSuccess.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
