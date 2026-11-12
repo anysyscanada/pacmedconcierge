@@ -267,9 +267,9 @@
   @media(min-width:560px){ form .btn{width:auto; padding-left:36px; padding-right:36px;} }
   .form-note{margin-top:20px; color:var(--muted); font-size:15px; max-width:820px;}
 
-  /* Form feedback: inline validation summary + the "ready to send" panel
-     shown after a valid submit, so the button always has a visible result
-     even where handing off to a mail app is blocked or unavailable. */
+  /* Form feedback: inline validation summary, a success panel shown once
+     the inquiry has been sent through FormSubmit, and an error panel with
+     email-app / copy fallbacks when sending from the page fails. */
   .form-error{
     display:none; margin-bottom:18px; padding:14px 16px;
     background:#fdf0ef; border:1px solid #e0a49e; border-radius:9px;
@@ -293,6 +293,21 @@
   .btn-outline{background:#fff; color:var(--navy); border:1px solid var(--navy);}
   .btn-outline:hover{background:var(--teal-light); color:var(--navy);}
   .copy-status{font-size:14.5px; color:var(--teal-dark); font-weight:700;}
+  .btn[disabled]{opacity:.65; cursor:wait;}
+  .inquiry-summary{margin-bottom:18px;}
+  .inquiry-summary h4{margin:0 0 8px; color:var(--navy); font-size:15px; font-weight:900;}
+  .inquiry-summary dl{margin:0; display:grid; grid-template-columns:minmax(110px,auto) 1fr; gap:3px 14px;}
+  .inquiry-summary dt{font-weight:900; color:var(--navy); font-size:14.5px;}
+  .inquiry-summary dd{margin:0; color:var(--navy); font-size:14.5px; white-space:pre-wrap; overflow-wrap:break-word;}
+  .form-fail{
+    display:none; margin-top:22px; background:#fdf0ef;
+    border:1px solid #e0a49e; border-radius:var(--radius); padding:24px 22px;
+  }
+  .form-fail.show{display:block;}
+  .form-fail h3{font-size:18.5px; margin-bottom:8px; color:#8c2f28;}
+  .form-fail p{color:#5f2a26; margin-bottom:16px;}
+  .form-fail .actions{display:flex; flex-wrap:wrap; gap:12px; align-items:center;}
+  .form-fail .copy-status{color:#8c2f28;}
 
   /* Privacy */
   .privacy-body{max-width:820px;}
@@ -534,12 +549,24 @@
               <label for="fMessage">Message</label>
               <textarea id="fMessage" name="message" required></textarea>
             </div>
+            <input type="text" name="_honey" id="fHoney" tabindex="-1" autocomplete="off" aria-hidden="true" style="display:none" />
             <p class="form-error" id="formError" role="alert"></p>
             <button type="submit" class="btn btn-navy">Send Inquiry</button>
           </form>
           <div class="form-success" id="formSuccess" role="status">
-            <h3>Your inquiry is ready to send</h3>
-            <p>We have opened your email app with the inquiry addressed to <strong>care@pacmedconcierge.com</strong> — just press send there to complete it. If your email app did not open, use one of these instead:</p>
+            <h3>Your inquiry has been sent</h3>
+            <p>Thank you — your inquiry has been emailed to Pacific Medical Concierge. We will reply to the email address you provided.</p>
+            <div class="inquiry-summary">
+              <h4>Your inquiry</h4>
+              <dl id="inquirySummary"></dl>
+            </div>
+            <div class="actions">
+              <button type="button" class="btn btn-navy" id="sendAnotherBtn">Send another inquiry</button>
+            </div>
+          </div>
+          <div class="form-fail" id="formFail" role="alert">
+            <h3>Your inquiry could not be sent from this page</h3>
+            <p>Something went wrong while sending, so your inquiry has not reached us yet. You can try the Send Inquiry button again, or use one of these instead:</p>
             <div class="actions">
               <a class="btn btn-navy" id="openMailBtn" href="mailto:care@pacmedconcierge.com">Open in your email app</a>
               <button type="button" class="btn btn-outline" id="copyInquiryBtn">Copy inquiry details</button>
@@ -609,6 +636,10 @@
     var form = document.getElementById('inquiryForm');
     var formError = document.getElementById('formError');
     var formSuccess = document.getElementById('formSuccess');
+    var formFail = document.getElementById('formFail');
+    var submitBtn = form.querySelector('button[type="submit"]');
+    var summary = document.getElementById('inquirySummary');
+    var sendAnotherBtn = document.getElementById('sendAnotherBtn');
     var openMailBtn = document.getElementById('openMailBtn');
     var copyBtn = document.getElementById('copyInquiryBtn');
     var copyStatus = document.getElementById('copyStatus');
@@ -644,6 +675,7 @@
 
       if (missing.length) {
         formSuccess.classList.remove('show');
+        formFail.classList.remove('show');
         formError.textContent = 'Please add ' + missing.join(', ') + ' before sending.';
         formError.classList.add('show');
         var firstInvalid = form.querySelector('.invalid');
@@ -652,7 +684,12 @@
       }
       formError.classList.remove('show');
       formError.textContent = '';
+      formFail.classList.remove('show');
+      copyStatus.textContent = '';
 
+      // Plain-text version of the inquiry, kept ready for the fallbacks in
+      // the error panel (email-app link and copy button) in case sending
+      // from the page fails.
       var subject = 'Inquiry — ' + service;
       var lines = [
         'Full Name: ' + name,
@@ -669,23 +706,73 @@
         + '&body=' + encodeURIComponent(lines.join('\n'));
       openMailBtn.setAttribute('href', href);
 
-      // Show the confirmation panel first, so there is visible feedback and
-      // a working fallback even if the mail-app hand-off is blocked (for
-      // example inside an embedded preview) or no mail app is set up.
-      formSuccess.classList.add('show');
-      copyStatus.textContent = '';
+      // Sending state: disable the button until FormSubmit answers.
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
 
-      // Hand off to the visitor's email app by clicking a real link rather
-      // than navigating this page to a mailto: URL, which embedded views
-      // silently swallow — the old behaviour that made the button look dead.
-      var trigger = document.createElement('a');
-      trigger.setAttribute('href', href);
-      trigger.style.display = 'none';
-      document.body.appendChild(trigger);
-      trigger.click();
-      document.body.removeChild(trigger);
+      var payload = {
+        name: name,
+        email: email,
+        service: service,
+        message: message,
+        _subject: 'Website inquiry — Pacific Medical Concierge',
+        _template: 'table',
+        _captcha: 'false',
+        _honey: field('fHoney').value
+      };
+      if (phone) { payload.phone = phone; }
 
-      formSuccess.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      function addSummaryRow(term, value) {
+        var dt = document.createElement('dt');
+        dt.textContent = term;
+        var dd = document.createElement('dd');
+        dd.textContent = value;
+        summary.appendChild(dt);
+        summary.appendChild(dd);
+      }
+
+      function sendFailed() {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Inquiry';
+        formFail.classList.add('show');
+        formFail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+
+      // Send the inquiry from the page through FormSubmit's AJAX endpoint;
+      // it is delivered to care@pacmedconcierge.com.
+      fetch('https://formsubmit.co/ajax/care@pacmedconcierge.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(function (res) {
+        if (!res.ok) { throw new Error('send failed'); }
+        return res.json().catch(function () { return {}; });
+      }).then(function (data) {
+        if (data && data.success !== undefined && String(data.success) !== 'true') {
+          throw new Error('send failed');
+        }
+        // Sent: swap the form for the confirmation panel.
+        summary.innerHTML = '';
+        addSummaryRow('Full Name', name);
+        addSummaryRow('Email', email);
+        if (phone) { addSummaryRow('Phone Number', phone); }
+        addSummaryRow('Service of interest', service);
+        addSummaryRow('Message', message);
+        form.style.display = 'none';
+        formSuccess.classList.add('show');
+        formSuccess.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }).catch(function () {
+        sendFailed();
+      });
+    });
+
+    sendAnotherBtn.addEventListener('click', function () {
+      form.reset();
+      formSuccess.classList.remove('show');
+      form.style.display = '';
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send Inquiry';
+      form.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     });
 
     copyBtn.addEventListener('click', function () {
