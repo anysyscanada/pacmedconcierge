@@ -411,6 +411,16 @@
   html[lang="ja"] .hero-tagline{letter-spacing:.05em;}
   html[lang="ja"] .brand-sub{letter-spacing:.02em;}
   html[lang="ja"] .direct-box .label{letter-spacing:.03em;}
+  /* Japanese mode: keep the six header nav links plus the language
+     selector on a single line at desktop widths — no wrapping inside
+     links, slightly tighter spacing and type than the other languages. */
+  html[lang="ja"] .main-nav a{white-space:nowrap;}
+  @media(min-width:860px){
+    html[lang="ja"] .header-inner{gap:10px;}
+    html[lang="ja"] .main-nav{flex:none;}
+    html[lang="ja"] .main-nav a{padding:10px 7px; font-size:14.5px;}
+    html[lang="ja"] .lang-select-header .lang-btn{padding:8px 9px;}
+  }
   html[lang="zh-CN"] body{
     font-family:"Lato","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC","Source Han Sans SC",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
   }
@@ -940,20 +950,20 @@
         heroTitle: "日本の医療を、バンクーバーからコーディネート",
         heroText: "Pacific Medical Conciergeは、カナダにお住まいの方が日本で健康診断や医療サービスを受けるためのお手伝いをしています。私たちは医療機関ではなく、コーディネーターです。手続きの流れをご案内し、実際の診療や医学的な判断は、日本の医療専門家が行います。",
         heroBtn: "お問い合わせ",
-        navWhy: "私たちの特徴", navServices: "サービス", navHow: "ご利用の流れ", navAbout: "私たちについて", navFaq: "よくあるご質問", navContact: "お問い合わせ",
+        navWhy: "特徴", navServices: "サービス", navHow: "ご利用の流れ", navAbout: "私たち", navFaq: "FAQ", navContact: "お問い合わせ",
         whyHeading: "私たちの特徴",
-        why1Title: "バンクーバーに窓口があります。",
+        why1Title: "バンクーバーの相談窓口",
         why1Text: "お問い合わせやご相談は、まずカナダ国内の私たちが承ります。日本との距離や言葉、制度の違いを橋渡しします。",
-        why2Title: "日本側の実績あるパートナー。",
+        why2Title: "日本側のパートナー",
         why2Text: "日本側のパートナーは医療ツーリズムのコーディネート経験を持ち、ご希望に合った選択肢を一緒に探します。",
-        why3Title: "流れと連絡を大切にします。",
+        why3Title: "明確な流れと連絡",
         why3Text: "私たちが力を入れるのは、旅行の予約そのものではなく実務の部分です。手続きの流れが分かりやすく、責任の所在がはっきりしていて、連絡が取りやすいこと — それを大切にしています。",
-        why4Title: "費用は、決める前にご説明します。",
+        why4Title: "費用の事前説明",
         why4Text: "医療機関やサービスによって費用は大きく異なるため、料金は公表していません。関係する料金をご提示しますので、内容をご確認いただいたうえで、進めるかどうかをご判断ください。",
         servicesHeading: "サービス",
         svc1Title: "健康診断(人間ドック)",
         svc1Text: "日本の質の高い健康診断 — 人間ドック — が、私たちの中心的なサービスです。信頼できる日本の医療機関での受診を手配します。",
-        svc2Title: "幹細胞治療に関するご相談",
+        svc2Title: "幹細胞治療のご相談",
         svc2Text: "日本での幹細胞注射に関するお問い合わせのコーディネートを行っています。東京の著名な医師へのご紹介も可能で、治療と上質な滞在を組み合わせたプランもご案内できます。治療を受けられるかどうか、リスクの説明、治療そのものは、Pacific Medical Conciergeではなく医療機関が行います。効果や結果をお約束するものではありません。",
         svc3Title: "書類・言語サポート",
         svc3Text: "コーディネートの一環として、医療文書の日英・英日翻訳や、結果の分かりやすい要約の作成をお手伝いします。医療翻訳・校正の専門的な経験を活かしたサポートです。",
@@ -962,13 +972,13 @@
         howHeading: "ご利用の流れ",
         step1Title: "お問い合わせ",
         step1Text: "まずはメールでお気軽にお問い合わせください。その際は、基本的なご連絡先とご関心のあるサービスのみをお知らせください。医療記録は送らないでください。",
-        step2Title: "ご希望をお聞かせください",
+        step2Title: "ご希望の確認",
         step2Text: "コーディネートの流れをご説明し、ご関心のある内容についてお伺いします。",
-        step3Title: "日本での選択肢を探します",
+        step3Title: "日本での選択肢を検討",
         step3Text: "日本側のパートナーと連携し、空き状況を確認しながら、適切な選択肢を探します。",
         step4Title: "医療機関による審査",
         step4Text: "医療機関が、必要な情報と、ご希望のサービスを提供できるかどうかを確認します。",
-        step5Title: "手配内容と費用のご確認",
+        step5Title: "手配と費用の確認",
         step5Text: "医療機関、サービス、費用についての情報をお渡ししますので、内容をご確認のうえ、進めるかどうかをご判断ください。",
         step6Title: "渡航の準備",
         step6Text: "合意した連絡方法や渡航の手配をコーディネートします。",
