@@ -232,6 +232,29 @@
   .about-text p strong{color:var(--navy);}
   .about-text p:last-child{margin-bottom:0;}
 
+  /* FAQ — expandable list of questions; each item starts collapsed and
+     opens on click (native details/summary). */
+  .faq-list{max-width:900px; display:grid; gap:12px;}
+  .faq-item{background:#fff; border:1px solid var(--line); border-radius:var(--radius);}
+  .faq-item[open]{border-color:var(--teal);}
+  .faq-item summary{
+    list-style:none; cursor:pointer; min-height:52px;
+    display:flex; align-items:center; gap:14px;
+    padding:18px 20px; font-weight:900; color:var(--navy); font-size:17.5px; line-height:1.35;
+  }
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item summary::after{
+    content:"+"; flex:none; margin-left:auto;
+    width:30px; height:30px; border-radius:50%;
+    background:var(--teal-light); color:var(--teal-dark);
+    display:inline-flex; align-items:center; justify-content:center;
+    font-size:19px; font-weight:900; line-height:1;
+  }
+  .faq-item[open] summary::after{content:"\2212"; background:var(--teal); color:#fff;}
+  .faq-item summary:hover{color:var(--teal-dark);}
+  .faq-item summary:focus-visible{outline:2px solid var(--teal); outline-offset:-2px; border-radius:var(--radius);}
+  .faq-answer{padding:2px 20px 20px; color:var(--muted);}
+
   /* Contact */
   .contact-grid{display:grid; grid-template-columns:1fr; gap:36px; align-items:start;}
   @media(min-width:860px){ .contact-grid{grid-template-columns:5fr 7fr; gap:56px;} }
@@ -374,6 +397,7 @@
       <a href="#services">Services</a>
       <a href="#how">How It Works</a>
       <a href="#about">About</a>
+      <a href="#faq">FAQ</a>
       <a href="#contact">Contact</a>
     </nav>
   </div>
@@ -517,6 +541,66 @@
           <p>Through our Japan-side partner — who has coordinated medical travel for international patients and built long-standing relationships with hospitals and specialists across Japan, including connections formed through work with advanced treatment technologies such as Gamma Knife radiosurgery — we connect you to that network and coordinate each step, from exploring options to provider review, arrangements and follow-up.</p>
           <p>We are coordinators, not medical providers. All clinical decisions are made by the qualified medical professionals who provide your care in Japan.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq">
+    <div class="wrap">
+      <div class="section-head">
+        <div class="rule" aria-hidden="true"></div>
+        <h2>Frequently Asked Questions</h2>
+      </div>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>What is a ningen dock?</summary>
+          <div class="faq-answer"><p>Ningen dock is Japan's comprehensive preventive health screening — a detailed set of examinations and tests that check your overall health and look for problems early, usually completed in a single day. Courses vary by provider; we help you find one that fits what you are looking for.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Do I need Japanese health insurance or to live in Japan?</summary>
+          <div class="faq-answer"><p>No. The screenings we coordinate are private, self-paid services, open to people visiting from Canada. You do not need Japanese health insurance or residency.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Is Pacific Medical Concierge a medical provider?</summary>
+          <div class="faq-answer"><p>No. We are coordinators, not medical providers. We connect you with providers in Japan and coordinate the arrangements. All clinical decisions are made by the qualified medical professionals who provide your care in Japan.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Which hospitals and doctors do you work with?</summary>
+          <div class="faq-answer"><p>We coordinate through our Japan-side partner with highly credible institutions in Japan. We do not publish a list of names. Once we understand what you need, we propose specific options for your case, and the provider reviews your case and confirms whether the service can be offered.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>How much does it cost?</summary>
+          <div class="faq-answer"><p>We do not publish prices, because the right option — and its cost — depends on your case. Before anything is booked, you receive the proposed arrangements and their costs, and you decide whether to go ahead. Nothing proceeds without your agreement.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>How does payment work?</summary>
+          <div class="faq-answer"><p>At present, payment for the services arranged is made on the Japan side. Before anything is booked, you receive the proposed arrangements and their costs in full, and you decide whether to go ahead.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Will my screening report be in English?</summary>
+          <div class="faq-answer"><p>Your screening report may be provided in English. If it is issued in Japanese, we will have it translated into English for you.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>What if a screening finds something?</summary>
+          <div class="faq-answer"><p>The provider explains your results. If you would like to explore further care in Japan, we can coordinate that inquiry — each case is reviewed by the provider. Once you are home, we can introduce you to a doctor from our network across Canada for follow-up.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>What should I know about the stem cell services?</summary>
+          <div class="faq-answer"><p>We coordinate inquiries about stem cell injections in Japan. The provider — not Pacific Medical Concierge — assesses suitability, explains the risks, and provides any treatment. We make no claims about results or effectiveness.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>Do I need to send medical records to make an inquiry?</summary>
+          <div class="faq-answer"><p>No. An initial inquiry asks only for your basic contact details and the service you are interested in.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>How far in advance should I contact you?</summary>
+          <div class="faq-answer"><p>Please contact us at least a month before the date you have in mind — a month to a month and a half ahead is ideal.</p></div>
+        </details>
+        <details class="faq-item">
+          <summary>How quickly will I hear back?</summary>
+          <div class="faq-answer"><p>We reply to inquiries within two business days.</p></div>
+        </details>
       </div>
     </div>
   </section>
