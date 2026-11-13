@@ -187,8 +187,6 @@
   .service-body{padding:26px 24px 30px;}
   .service-body h3{font-size:21px; margin-bottom:10px;}
   .service-body p{color:var(--muted);}
-  .service-includes{margin-top:16px;}
-  .service-includes .includes-lead{color:var(--navy); font-weight:700; margin-bottom:6px;}
   .includes-list{margin:0 0 14px; padding-left:20px; color:var(--muted);}
   .includes-list li{margin-bottom:3px; line-height:1.5;}
   .includes-list li:last-child{margin-bottom:0;}
@@ -259,6 +257,8 @@
   .faq-item summary:hover{color:var(--teal-dark);}
   .faq-item summary:focus-visible{outline:2px solid var(--teal); outline-offset:-2px; border-radius:var(--radius);}
   .faq-answer{padding:2px 20px 20px; color:var(--muted);}
+  .faq-answer p{margin-bottom:12px;}
+  .faq-answer p:last-child{margin-bottom:0;}
 
   /* Contact */
   .contact-grid{display:grid; grid-template-columns:1fr; gap:36px; align-items:start;}
@@ -466,20 +466,6 @@
           <div class="service-body">
             <h3>Health Screenings (Ningen Dock)</h3>
             <p>Premium Japanese health screenings — ningen dock — are our main service. We are committed to arranging them at highly credible medical institutions in Japan.</p>
-            <div class="service-includes">
-              <p class="includes-lead">A typical course includes:</p>
-              <ul class="includes-list">
-                <li>Physical measurements and blood pressure</li>
-                <li>Extensive blood and urine tests</li>
-                <li>Vision and hearing checks</li>
-                <li>Electrocardiogram (ECG)</li>
-                <li>Chest X-ray and lung-function test</li>
-                <li>Abdominal ultrasound</li>
-                <li>Stomach examination (endoscopy or barium X-ray)</li>
-                <li>A doctor's consultation on your results</li>
-              </ul>
-              <p>Many courses also offer options such as CT or MRI imaging and additional cancer-screening tests. Exact contents vary by course — we confirm what is included in the options proposed for you.</p>
-            </div>
           </div>
         </article>
         <article class="service-card">
@@ -574,7 +560,21 @@
       <div class="faq-list">
         <details class="faq-item">
           <summary>What is a ningen dock?</summary>
-          <div class="faq-answer"><p>Ningen dock is Japan's comprehensive preventive health screening — a detailed set of examinations and tests that check your overall health and look for problems early, usually completed in a single day. Courses vary by provider; we help you find one that fits what you are looking for.</p></div>
+          <div class="faq-answer">
+            <p>Ningen dock is Japan's comprehensive preventive health screening — a detailed set of examinations and tests that check your overall health and look for problems early, usually completed in a single day.</p>
+            <p>A typical course includes:</p>
+            <ul class="includes-list">
+              <li>Physical measurements and blood pressure</li>
+              <li>Extensive blood and urine tests</li>
+              <li>Vision and hearing checks</li>
+              <li>Electrocardiogram (ECG)</li>
+              <li>Chest X-ray and lung-function test</li>
+              <li>Abdominal ultrasound</li>
+              <li>Stomach examination (endoscopy or barium X-ray)</li>
+              <li>A doctor's consultation on your results</li>
+            </ul>
+            <p>Many courses also offer options such as CT or MRI imaging and additional cancer-screening tests. Exact contents vary by course — we confirm what is included in the options proposed for you.</p>
+          </div>
         </details>
         <details class="faq-item">
           <summary>Do I need Japanese health insurance or to live in Japan?</summary>
