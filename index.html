@@ -439,6 +439,107 @@
     html[lang="zh-CN"] .lang-select-header .lang-btn{padding:8px 9px;}
   }
 
+  /* ---------- Guided chat widget ---------- */
+  .chat-bubble{
+    position:fixed; right:20px; bottom:20px; z-index:90;
+    display:inline-flex; align-items:center; gap:9px;
+    background:var(--navy); color:#fff; border:none; cursor:pointer;
+    font:inherit; font-size:16px; font-weight:900;
+    padding:14px 22px; min-height:54px; border-radius:999px;
+    box-shadow:0 10px 28px rgba(15,42,77,.32);
+  }
+  .chat-bubble:hover{background:var(--navy-dark);}
+  .chat-bubble:focus-visible{outline:2px solid var(--teal); outline-offset:2px;}
+  .chat-bubble svg{width:22px; height:22px; flex:none;}
+  .chat-bubble.hidden{display:none;}
+  .chat-panel{
+    position:fixed; right:20px; bottom:20px; z-index:95;
+    width:360px; max-width:calc(100vw - 32px);
+    height:min(580px, calc(100dvh - 40px));
+    background:#fff; border:1px solid var(--line); border-radius:16px;
+    box-shadow:0 24px 60px rgba(15,42,77,.28);
+    display:none; flex-direction:column; overflow:hidden;
+  }
+  .chat-panel.open{display:flex;}
+  .chat-head{
+    flex:none; display:flex; align-items:center; gap:10px;
+    background:var(--navy); color:#fff; padding:14px 16px;
+  }
+  .chat-head h2{color:#fff; font-size:15.5px; line-height:1.35; margin:0; flex:1;}
+  .chat-close{
+    flex:none; width:40px; height:40px; border:none; border-radius:50%;
+    background:rgba(255,255,255,.14); color:#fff; cursor:pointer;
+    font-size:22px; line-height:1; display:inline-flex; align-items:center; justify-content:center;
+  }
+  .chat-close:hover{background:rgba(255,255,255,.28);}
+  .chat-close:focus-visible{outline:2px solid #fff; outline-offset:1px;}
+  .chat-messages{
+    flex:1; overflow-y:auto; padding:16px 14px;
+    display:flex; flex-direction:column; gap:10px;
+    background:var(--teal-mist);
+  }
+  .chat-msg{
+    max-width:88%; padding:11px 14px; border-radius:14px;
+    font-size:15.5px; line-height:1.55; overflow-wrap:break-word;
+  }
+  .chat-msg.bot{
+    align-self:flex-start; background:#fff; color:var(--ink);
+    border:1px solid var(--line); border-bottom-left-radius:4px;
+  }
+  .chat-msg.user{
+    align-self:flex-end; background:var(--navy); color:#fff;
+    border-bottom-right-radius:4px; white-space:pre-wrap;
+  }
+  .chat-msg a{font-weight:700;}
+  .chat-msg dl{margin:6px 0 0; display:grid; grid-template-columns:minmax(86px,auto) 1fr; gap:3px 12px;}
+  .chat-msg dt{font-weight:900; color:var(--navy); font-size:14px;}
+  .chat-msg dd{margin:0; font-size:14.5px; white-space:pre-wrap; overflow-wrap:break-word;}
+  .chat-actions{
+    flex:none; display:none; flex-wrap:wrap; gap:8px;
+    padding:12px 14px 4px; background:var(--teal-mist);
+  }
+  .chat-actions.show{display:flex;}
+  .chat-action{
+    display:inline-flex; align-items:center; justify-content:center;
+    font:inherit; font-size:15px; font-weight:700; cursor:pointer;
+    padding:10px 16px; min-height:44px; border-radius:999px;
+    border:1px solid var(--teal-dark); background:#fff; color:var(--teal-dark);
+    text-decoration:none;
+  }
+  .chat-action:hover{background:var(--teal-light);}
+  .chat-action.primary{background:var(--teal); border-color:var(--teal); color:#fff;}
+  .chat-action.primary:hover{background:var(--teal-dark);}
+  .chat-action:focus-visible{outline:2px solid var(--navy); outline-offset:1px;}
+  .chat-copy-status{flex-basis:100%; font-size:14px; color:var(--teal-dark); font-weight:700;}
+  .chat-input-row{
+    flex:none; display:flex; gap:8px; padding:12px 14px;
+    padding-bottom:calc(12px + env(safe-area-inset-bottom, 0px));
+    background:#fff; border-top:1px solid var(--line);
+  }
+  .chat-input-row input{
+    flex:1; min-width:0; font:inherit; font-size:16px; color:var(--ink);
+    border:1px solid #c3d2d0; border-radius:999px; padding:11px 16px; min-height:48px;
+    background:#fff;
+  }
+  .chat-input-row input:focus{outline:2px solid var(--teal); outline-offset:1px; border-color:var(--teal);}
+  .chat-input-row input[disabled]{background:var(--teal-mist); color:var(--muted);}
+  .chat-send{
+    flex:none; width:48px; height:48px; border:none; border-radius:50%;
+    background:var(--navy); color:#fff; cursor:pointer;
+    display:inline-flex; align-items:center; justify-content:center;
+  }
+  .chat-send:hover{background:var(--navy-dark);}
+  .chat-send:focus-visible{outline:2px solid var(--teal); outline-offset:1px;}
+  .chat-send svg{width:20px; height:20px;}
+  .chat-send[disabled]{opacity:.55; cursor:wait;}
+  @media(max-width:560px){
+    .chat-bubble{right:16px; bottom:16px;}
+    .chat-panel{
+      top:0; right:0; bottom:0; left:0;
+      width:auto; max-width:none; height:auto; border-radius:0; border:none;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto;}
   }
@@ -809,6 +910,26 @@
     <p id="footerText">© 2026 Pacific Medical Concierge · Vancouver, Canada</p>
   </div>
 </footer>
+
+<!-- GUIDED CHAT -->
+<button type="button" class="chat-bubble" id="chatBubble" aria-haspopup="dialog" aria-expanded="false">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+  <span id="chatBubbleLabel">Chat with us</span>
+</button>
+<div class="chat-panel" id="chatPanel" role="dialog" aria-modal="false" aria-labelledby="chatTitle">
+  <div class="chat-head">
+    <h2 id="chatTitle">Pacific Medical Concierge — send an inquiry by chat</h2>
+    <button type="button" class="chat-close" id="chatClose" aria-label="Close chat">&times;</button>
+  </div>
+  <div class="chat-messages" id="chatMessages" aria-live="polite"></div>
+  <div class="chat-actions" id="chatActions"></div>
+  <form class="chat-input-row" id="chatForm">
+    <input type="text" id="chatInput" placeholder="Type here…" autocomplete="off" />
+    <button type="submit" class="chat-send" id="chatSend" aria-label="Send">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+    </button>
+  </form>
+</div>
 
 <script>
   (function () {
@@ -1249,6 +1370,7 @@
       var nv = document.getElementById('mainNav');
       if (nt && nv) { nt.setAttribute('aria-label', menuLabel(nv.classList.contains('open'))); }
       if (lastInquiry) { renderSummary(); }
+      if (typeof onLangApplied === 'function') { onLangApplied(lang); }
       try { window.localStorage.setItem(LANG_KEY, lang); } catch (err) {}
     }
 
@@ -1446,6 +1568,439 @@
         return ok;
       }
     });
+
+    /* ---------- Guided chat widget ----------
+       Follows the approved script in website-chat-script.md: greeting
+       (automated-assistant disclosure) → name → email (gentle re-ask) →
+       optional phone with Skip → service options → message → summary +
+       the form's privacy consent → [Agree and send] / [Start over].
+       Sends through the same FormSubmit AJAX endpoint as the contact
+       form, with English field names and English service values. */
+    var CHAT = {
+      en: {
+        bubble: "Chat with us",
+        header: "Pacific Medical Concierge — send an inquiry by chat",
+        placeholder: "Type here…",
+        closeLabel: "Close chat",
+        sendLabel: "Send",
+        greeting: "Hello, and thank you for visiting Pacific Medical Concierge. I'm an automated assistant — I can take a few details and pass your inquiry to our coordinator, who replies within two business days. May I start with your name?",
+        emailInvalid: "That doesn't look quite like an email address — could you check it and type it once more?",
+        askPhone: "And a phone number, if you'd like us to reach you by phone — or tap Skip.",
+        skip: "Skip",
+        askService: "Which service are you interested in?",
+        services: ["Health Screenings (Ningen Dock)", "Stem Cell Services", "Documents and Language Support", "Advanced Treatments", "Other"],
+        askMessage: "Please type your message — what you'd like to ask, or anything you'd like us to know. (Please don't include medical records in this first message.)",
+        summaryTitle: "Here's what I'll send:",
+        confirmPrompt: "Before sending, please confirm the following:",
+        agreeSend: "Agree and send",
+        startOver: "Start over",
+        sending: "Sending…",
+        success: "Your inquiry has been sent — thank you. We'll reply to your email address within two business days. If anything is urgent, you can also reach us at care@pacmedconcierge.com.",
+        failure: "Sorry — the message couldn't be sent just now, and nothing has reached us yet.",
+        openMail: "Open in your email app",
+        copyDetails: "Copy inquiry details"
+      },
+      ja: {
+        bubble: "チャットで相談",
+        header: "Pacific Medical Concierge — チャットでのお問い合わせ",
+        placeholder: "ここに入力…",
+        closeLabel: "チャットを閉じる",
+        sendLabel: "送信",
+        greeting: "こんにちは。Pacific Medical Conciergeへようこそ。私は自動案内です。いくつかご入力いただくと、担当者へお問い合わせをお渡しします（返信は2営業日以内です）。まず、お名前を教えてください。",
+        emailInvalid: "メールアドレスの形式が少し違うようです。お確かめのうえ、もう一度ご入力ください。",
+        askPhone: "お電話での連絡をご希望の場合は、電話番号もお願いします。不要な場合は『スキップ』を押してください。",
+        skip: "スキップ",
+        askService: "ご関心のあるサービスを選んでください。",
+        services: ["健康診断（人間ドック）", "幹細胞治療に関するご相談", "書類・言語サポート", "高度な治療オプション", "その他"],
+        askMessage: "メッセージをご入力ください。ご質問や、お伝えになりたいことをどうぞ。（初回のお問い合わせでは、医療記録は送らないでください。）",
+        summaryTitle: "送信内容はこちらです",
+        confirmPrompt: "送信の前に、ご確認をお願いします。",
+        agreeSend: "同意して送信",
+        startOver: "最初からやり直す",
+        sending: "送信中…",
+        success: "お問い合わせを送信しました。ありがとうございます。2営業日以内に、ご入力のメールアドレス宛てに返信いたします。お急ぎの場合は、care@pacmedconcierge.com へ直接ご連絡ください。",
+        failure: "申し訳ありません。うまく送信できず、お問い合わせはまだ届いていません。",
+        openMail: "メールアプリで開く",
+        copyDetails: "お問い合わせ内容をコピー"
+      },
+      zh: {
+        bubble: "在线咨询",
+        header: "Pacific Medical Concierge — 聊天咨询",
+        placeholder: "在此输入…",
+        closeLabel: "关闭聊天",
+        sendLabel: "发送",
+        greeting: "您好，感谢访问 Pacific Medical Concierge。我是自动助手，可以记录您的基本信息并将咨询转交我们的协调员（我们会在两个工作日内回复）。请先告诉我您的姓名。",
+        emailInvalid: "这个邮箱地址的格式似乎不太对，请检查后再输入一次。",
+        askPhone: "如果您希望我们通过电话联系您，请留下电话号码；不需要的话，请点『跳过』。",
+        skip: "跳过",
+        askService: "您对哪项服务感兴趣？",
+        services: ["健康体检（日本精密体检）", "干细胞服务", "文件与语言支持", "先进治疗", "其他"],
+        askMessage: "请输入您的留言 — 您想咨询的问题，或希望我们了解的情况。（初次咨询请勿发送医疗记录。）",
+        summaryTitle: "我将发送以下内容:",
+        confirmPrompt: "发送前，请确认以下内容:",
+        agreeSend: "同意并发送",
+        startOver: "重新开始",
+        sending: "发送中…",
+        success: "您的咨询已发送，谢谢。我们会在两个工作日内回复到您的邮箱。如有紧急事项，也可以直接联系 care@pacmedconcierge.com。",
+        failure: "抱歉，留言暂时无法发送，我们尚未收到您的咨询。",
+        openMail: "在邮件应用中打开",
+        copyDetails: "复制咨询内容"
+      }
+    };
+    // English service values recorded in the payload in every language,
+    // exactly as the contact form records them.
+    var CHAT_SERVICE_VALUES = ["Health Screenings (Ningen Dock)", "Stem Cell Services", "Documents and Language Support", "Advanced Treatments", "Other"];
+
+    var chatBubble = document.getElementById('chatBubble');
+    var chatBubbleLabel = document.getElementById('chatBubbleLabel');
+    var chatPanel = document.getElementById('chatPanel');
+    var chatTitle = document.getElementById('chatTitle');
+    var chatClose = document.getElementById('chatClose');
+    var chatMessages = document.getElementById('chatMessages');
+    var chatActions = document.getElementById('chatActions');
+    var chatForm = document.getElementById('chatForm');
+    var chatInput = document.getElementById('chatInput');
+    var chatSend = document.getElementById('chatSend');
+
+    var chat = {
+      started: false,
+      step: 'name',
+      lang: curLang,
+      name: '', email: '', phone: '', service: '', message: '',
+      busy: false,
+      confirmRepeated: false
+    };
+
+    function chatStrings() { return CHAT[chat.lang] || CHAT.en; }
+
+    function scrollChat() {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function botSay(text) {
+      var d = document.createElement('div');
+      d.className = 'chat-msg bot';
+      d.textContent = text;
+      chatMessages.appendChild(d);
+      scrollChat();
+      return d;
+    }
+
+    function botSayHTML(html) {
+      var d = document.createElement('div');
+      d.className = 'chat-msg bot';
+      d.innerHTML = html;
+      chatMessages.appendChild(d);
+      scrollChat();
+      return d;
+    }
+
+    function userSay(text) {
+      var d = document.createElement('div');
+      d.className = 'chat-msg user';
+      d.textContent = text;
+      chatMessages.appendChild(d);
+      scrollChat();
+    }
+
+    function clearActions() {
+      chatActions.innerHTML = '';
+      chatActions.classList.remove('show');
+    }
+
+    function addAction(label, cls, handler) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'chat-action' + (cls ? ' ' + cls : '');
+      b.textContent = label;
+      b.addEventListener('click', handler);
+      chatActions.appendChild(b);
+      chatActions.classList.add('show');
+      return b;
+    }
+
+    function setInputEnabled(on) {
+      chatInput.disabled = !on;
+      chatSend.disabled = !on;
+    }
+
+    function askEmail() {
+      var s = chatStrings();
+      if (chat.lang === 'ja') {
+        botSay(chat.name + "様、ありがとうございます。メールアドレスを教えてください。");
+      } else if (chat.lang === 'zh') {
+        botSay("谢谢您，" + chat.name + "。请提供您的电子邮箱地址。");
+      } else {
+        botSay("Thank you, " + chat.name + ". What is your email address?");
+      }
+      chat.step = 'email';
+    }
+
+    function showSkip() {
+      clearActions();
+      addAction(chatStrings().skip, '', function () {
+        userSay(chatStrings().skip);
+        chat.phone = '';
+        clearActions();
+        showServices();
+      });
+    }
+
+    function askPhone() {
+      botSay(chatStrings().askPhone);
+      chat.step = 'phone';
+      showSkip();
+    }
+
+    function showServices() {
+      var s = chatStrings();
+      botSay(s.askService);
+      chat.step = 'service';
+      clearActions();
+      s.services.forEach(function (label, i) {
+        addAction(label, '', function () {
+          userSay(label);
+          chat.service = CHAT_SERVICE_VALUES[i];
+          clearActions();
+          askMessage();
+        });
+      });
+    }
+
+    function askMessage() {
+      botSay(chatStrings().askMessage);
+      chat.step = 'message';
+    }
+
+    function showConfirm() {
+      var s = chatStrings();
+      var terms = UI[chat.lang].terms;
+      var summaryBox = botSay(s.summaryTitle);
+      var dl = document.createElement('dl');
+      function row(term, value) {
+        var dt = document.createElement('dt');
+        dt.textContent = term;
+        var dd = document.createElement('dd');
+        dd.textContent = value;
+        dl.appendChild(dt);
+        dl.appendChild(dd);
+      }
+      // Show the service the way the visitor picked it: the localized
+      // label for a tapped option, or their typed words as written.
+      var serviceDisplay = chat.service;
+      var idx = CHAT_SERVICE_VALUES.indexOf(chat.service);
+      if (idx >= 0) { serviceDisplay = s.services[idx]; }
+      row(terms.name, chat.name);
+      row(terms.email, chat.email);
+      row(terms.phone, chat.phone || '—');
+      row(terms.service, serviceDisplay);
+      row(terms.message, chat.message);
+      summaryBox.appendChild(dl);
+      scrollChat();
+      botSay(s.confirmPrompt);
+      botSayHTML(HTMLS[chat.lang].consentText);
+      chat.step = 'confirm';
+      chat.confirmRepeated = false;
+      clearActions();
+      addAction(s.agreeSend, 'primary', function () { sendChat(); });
+      addAction(s.startOver, '', function () { startConversation(); });
+      setInputEnabled(true);
+    }
+
+    function chatInquiryLines() {
+      return [
+        'Full Name: ' + chat.name,
+        'Email: ' + chat.email,
+        'Phone Number: ' + (chat.phone || '—'),
+        'Service of interest: ' + chat.service,
+        'Privacy Policy consent: Agreed',
+        '',
+        'Message:',
+        chat.message
+      ];
+    }
+
+    function sendChat() {
+      var s = chatStrings();
+      clearActions();
+      chat.step = 'sending';
+      chat.busy = true;
+      setInputEnabled(false);
+      botSay(s.sending);
+      var payload = {
+        name: chat.name,
+        email: chat.email,
+        service: chat.service,
+        message: chat.message,
+        consent: 'Agreed to the collection and use of information as described in the Privacy Policy',
+        _subject: 'Website chat inquiry — Pacific Medical Concierge',
+        _template: 'table',
+        _captcha: 'false',
+        _honey: ''
+      };
+      if (chat.phone) { payload.phone = chat.phone; }
+      fetch('https://formsubmit.co/ajax/care@pacmedconcierge.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(function (res) {
+        if (!res.ok) { throw new Error('send failed'); }
+        return res.json().catch(function () { return {}; });
+      }).then(function (data) {
+        if (data && data.success !== undefined && String(data.success) !== 'true') {
+          throw new Error('send failed');
+        }
+        chat.busy = false;
+        chat.step = 'done';
+        botSay(s.success);
+        clearActions();
+        addAction(s.startOver, '', function () { startConversation(); });
+      }).catch(function () {
+        chat.busy = false;
+        chat.step = 'failed';
+        botSay(s.failure);
+        // Same fallbacks as the contact form: email-app link and copy.
+        var subject = 'Inquiry — ' + chat.service;
+        var lines = chatInquiryLines();
+        var text = 'To: care@pacmedconcierge.com\nSubject: ' + subject + '\n\n' + lines.join('\n');
+        clearActions();
+        var mail = document.createElement('a');
+        mail.className = 'chat-action primary';
+        mail.textContent = s.openMail;
+        mail.setAttribute('href', 'mailto:care@pacmedconcierge.com'
+          + '?subject=' + encodeURIComponent(subject)
+          + '&body=' + encodeURIComponent(lines.join('\n')));
+        chatActions.appendChild(mail);
+        chatActions.classList.add('show');
+        var status = document.createElement('span');
+        status.className = 'chat-copy-status';
+        status.setAttribute('aria-live', 'polite');
+        addAction(s.copyDetails, '', function () {
+          function done() { status.textContent = UI[chat.lang].copyDone; }
+          function failed() { status.textContent = UI[chat.lang].copyFail; }
+          function fallbackCopy() {
+            var ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.position = 'fixed';
+            ta.style.opacity = '0';
+            document.body.appendChild(ta);
+            ta.select();
+            var ok = false;
+            try { ok = document.execCommand('copy'); } catch (err) { ok = false; }
+            document.body.removeChild(ta);
+            return ok;
+          }
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(done, function () {
+              if (fallbackCopy()) { done(); } else { failed(); }
+            });
+          } else if (fallbackCopy()) { done(); } else { failed(); }
+        });
+        chatActions.appendChild(status);
+        addAction(s.startOver, '', function () { startConversation(); });
+      });
+    }
+
+    function startConversation() {
+      chat.started = true;
+      chat.step = 'name';
+      chat.name = ''; chat.email = ''; chat.phone = ''; chat.service = ''; chat.message = '';
+      chat.busy = false;
+      chat.confirmRepeated = false;
+      chatMessages.innerHTML = '';
+      clearActions();
+      setInputEnabled(true);
+      botSay(chatStrings().greeting);
+      if (chatPanel.classList.contains('open')) { chatInput.focus(); }
+    }
+
+    function handleChatText(text) {
+      var s = chatStrings();
+      if (chat.busy) { return; }
+      if (chat.step === 'name') {
+        chat.name = text;
+        userSay(text);
+        askEmail();
+      } else if (chat.step === 'email') {
+        userSay(text);
+        if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text)) {
+          chat.email = text;
+          askPhone();
+        } else {
+          botSay(s.emailInvalid);
+        }
+      } else if (chat.step === 'phone') {
+        chat.phone = text;
+        userSay(text);
+        clearActions();
+        showServices();
+      } else if (chat.step === 'service') {
+        // A typed reply instead of a tap is recorded as written.
+        chat.service = text;
+        userSay(text);
+        clearActions();
+        askMessage();
+      } else if (chat.step === 'message') {
+        chat.message = text;
+        userSay(text);
+        showConfirm();
+      } else if (chat.step === 'confirm') {
+        // Buttons drive this step; gently repeat the prompt once if the
+        // visitor types instead.
+        if (!chat.confirmRepeated) {
+          chat.confirmRepeated = true;
+          botSay(s.confirmPrompt);
+        }
+      }
+    }
+
+    chatForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var text = chatInput.value.trim();
+      if (!text) { return; }
+      chatInput.value = '';
+      handleChatText(text);
+    });
+
+    function openChat() {
+      chatPanel.classList.add('open');
+      chatBubble.classList.add('hidden');
+      chatBubble.setAttribute('aria-expanded', 'true');
+      if (!chat.started) { startConversation(); }
+      chatInput.focus();
+    }
+
+    function closeChat() {
+      chatPanel.classList.remove('open');
+      chatBubble.classList.remove('hidden');
+      chatBubble.setAttribute('aria-expanded', 'false');
+      chatBubble.focus();
+    }
+
+    chatBubble.addEventListener('click', openChat);
+    chatClose.addEventListener('click', closeChat);
+    // The Privacy Policy link inside the consent step jumps to the
+    // on-page section; close the panel so the visitor can read it.
+    chatMessages.addEventListener('click', function (e) {
+      if (e.target.tagName === 'A' && e.target.getAttribute('href') === '#privacy') {
+        closeChat();
+      }
+    });
+
+    // Called from applyLanguage: refresh the widget's own labels, and if
+    // the site language changed mid-visit, restart the conversation in
+    // the new language.
+    function onLangApplied(lang) {
+      var changed = chat.started && lang !== chat.lang;
+      chat.lang = lang;
+      var s = chatStrings();
+      chatBubbleLabel.textContent = s.bubble;
+      chatTitle.textContent = s.header;
+      chatInput.setAttribute('placeholder', s.placeholder);
+      chatClose.setAttribute('aria-label', s.closeLabel);
+      chatSend.setAttribute('aria-label', s.sendLabel);
+      if (changed) { startConversation(); }
+    }
 
     // Apply the visitor's saved language choice (English by default).
     applyLanguage(curLang);
